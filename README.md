@@ -2,477 +2,125 @@
 
 ## 6월 7일 
 
-176. 스윙의 페인팅 기본
-        - 모든 컴포넌트는 자신의 모양을 스스로 그린다
-        - 컨테이너는 자신을 그리고 그 위에 자식 컴포넌트들에게 그리도록 지시
-        - 모든 스윙 컴포넌트는 자신의 모양을 그리는 paintComponent() 메소드 보유
+207. 자바의 입출력 스트림
+        - 입력 스트림 : 입력 장치로부터 자바 프로그램으로 데이터를 전달하는 객체
+        - 출력 스트림 : 자바 프로그램에서 출력 장치로 데이터를 보내는 객체
+        - 입출력 스트림 기본 단위 : 바이트
+        - 단방향 스트림, 선입선출 구조
 
-177. public void paintComponent(Graphics g)
-        - 스윙 컴포넌트가 자신의 모양을 그리는 메소드
+208. 문자 스트림
+        - 문자만 입출력하는 스트림
+        - 문자가 아닌 바이너리 데이터는 스트림에서 처리하지 못함
+        - 문자가 아닌 데이터를 문자 스트림으로 출력하면 깨진 기호가 출력
+        - 바이너리 파일을 문자 스트림으로 읽으면 읽을 수 없는 바이트가 생겨서 오류 발생
 
-178. paintComponent(Graphic g)의 오버라이딩
-        - 개발자가 JComponent를 상속받아 새로운 컴포넌트 설계
-``` java
-import javax.swing.*;
-import java.awt.*;
+209. 바이트 스트림
+        - 입출력 데이터를 단순 바이트의 흐름으로 처리
+        - 문자 데이터 든 바이너리 데이터든 상관없이 처리 가능
 
-public class paintJPanelEx extends JFrame {
-	public paintJPanelEx() {
-		setTitle("JPanel의 paintComponent() 예제");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setContentPane(new MyPanel()); 
-		setSize(250,200);
-		setVisible(true);
-	}
+![Alt text](image-1.png)
 
-	class MyPanel extends JPanel {
-		public void paintComponent(Graphics g) {
-			super.paintComponent(g); 
-			g.setColor(Color.BLUE); 
-			g.drawRect(10,10,50,50); 
-			g.drawRect(50,50,50,50); 
+210. 스트림 연결
+        - 여러 개의 스트림을 연결하여 사용할 수 있음
 
-			g.setColor(Color.MAGENTA); 
-			g.drawRect(90,90,50,50);
-		}
-	}
-	public static void main(String [] args) {
-		new paintJPanelEx();
-	}
-}
-```
-179. 그래픽 기반 GUI 프로그래밍
-        - 스윙 컴포넌트에 의존하지 않고 선, 원 이미지 등을 이용하여 직접 화면을 구성하는 방법
-
-180. Graphics의 기능
-        - 색상 선택하기
-        - 문자열 그리기
-        - 도형 그리기
-        - 도형 칠하기
-        - 이미지 그리기
-        - 클리핑
-
+211. 문자 스트림으로 텍스트 파일 읽기
+        - 텍스트 파일을 읽기 위해 문자 스트림 FileReader 클래스 이용
 ```java
-import javax.swing.*;
-import java.awt.*;
+import java.io.*;
 
-public class GraphicsColorFontEx extends JFrame {
-	public GraphicsColorFontEx() {
-		setTitle("문자열, Color, Font 사용 예제");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setContentPane(new MyPanel());
-		setSize(300, 300);
-		setVisible(true);
-	}
-
-	class MyPanel extends JPanel {
-		public void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			g.setColor(Color.BLUE); 
-			g.drawString("자바가 정말 재밌다", 30,30);
-			g.setColor(new Color(255, 0, 0)); 
-			g.setFont(new Font("Arial", Font.ITALIC, 30));
-			g.drawString("How much?", 30, 70);
-			g.setColor(new Color(0x00ff00ff));
-			for(int i=1; i<=4; i++) {
-				g.setFont(new Font("Jokerman", Font.ITALIC, i*10));
-				g.drawString("This much!!", 30, 60+i*40);
-			}
-		}
-	}
-	public static void main(String [] args) {
-		new GraphicsColorFontEx();
-	}
-}
-```
-181. 도형 그리기
-        - 선, 티원, 사격형, 둥근 모서리 사각형, 원호, 폐 다각형 그리기
-        - 선의 굵기는 조절할 수 없음
-```java
-import javax.swing.*;
-import java.awt.*;
-
-public class GraphicsDrawLineEx extends JFrame {
-	public GraphicsDrawLineEx() {
-		setTitle("drawLine 사용");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setContentPane(new MyPanel());
-		setSize(200, 150);
-		setVisible(true);
-	}
-
-	class MyPanel extends JPanel {
-		public void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			g.setColor(Color.RED); 
-			g.drawLine(20, 20, 100, 100);
-            g.drawOval(20,20,80,80);
-            g.drawRect(20,20,80,80);
-            g.drawRoundRect(20,20,120,80,40,60);
-			g.drawArc(20,100,80,80,90,270);
-            // 다각형
-			int []x = {80,40,80,120};
-			int []y = {40,120,200,120}; 
-			g.drawPolygon(x, y, 4);
-		}
-	}
-	public static void main(String [] args) {
-		new GraphicsDrawLineEx();
-	}
-}
-```
-182. JLabel을 이용한 이미지 그리기
-        - 장점: 이미지 그리기 간편 용이
-        - 단점: 이미지의 원본 크기대로 그리므로 이미지 크기 조절 불가
-183. Graphics의 drawImage()로 이미지 출력
-        - 장점: 이미지 일부분 등 이미지의 원본 크기와 다르게 그리기 가능
-        - 단점: 컴포넌트로 관리할 수 없음
-```java
-import javax.swing.*;
-import java.awt.*;
-
-public class GraphicsDrawImageEx1 extends JFrame {
-	public GraphicsDrawImageEx1() {
-		setTitle("원본 크기로 원하는 위치에 이미지 그리기");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setContentPane(new MyPanel());
-		
-		setSize(300, 400);
-		setVisible(true);
-	}
-
-	class MyPanel extends JPanel {
-		private ImageIcon icon = new ImageIcon("images/image0.jpg");
-		private Image img = icon.getImage();
-
-		public void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			// g.drawImage(img, 20,20, this);
-            g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
-		}
-	}
-
-	public static void main(String [] args) {
-		new GraphicsDrawImageEx1();
-	}
-} 
-```
-184. repaint()
-        - 모든 컴포넌트가 가지고 있는 메소드
-
-185. repaint()의 호출이 필요한 경우
-        - 프로그램에서 컴포넌트의 모양과 위치를 변경하고 바로 화면에 반영시키고자 하는 경우
-        - 컴포넌트가 다시 그려져야 그 때 변경된 위치에 변경된 모양으로 출력됨
-        - repaint()는 자바 플랫폼에게 지금 당장 컴포넌트를 다시 그리도록 지시함
-
-186. 멀티태스킹
-        - 여러 개의 작업(태스크)이 동시에 처리되는 것
-
-![Alt text](image-3.png)
-
-187. 스레드(thread)
-        - 운영체제에 의해 관리되는 하나의 작업 혹은 태스크
-        - 스레드와 태스크(혹은 작업)은 바꾸어 사용해도 무관
-
-188. 멀티스레딩(multi-threading)
-        - 여러 스레드를 동시에 실행시키는 응용프로그램을 작성하는 기법
-
-189. 스레드 코드
-        - 작업을 실행하기 위해 작성한 프로그램 코드
-        - 개발자가 작성
-190. 스레드 정보
-        - 스레드 명, 스레드 ID, 스레드의 실행 소요 시간, 스레드의 우선 순위 등 
-        - 운영체제가 스레드에 대해 관리하는 정보
-
-191. 멀티프로세싱
-        - 하나의 응용프로그램이 여러 개의 프로세스를 생성하고, 각 프로세스가 하나의 작업을 처리하는 기법
-        - 각 프로세스 독립된 메모리 영역을 보유하고 실행
-        - 프로세스 사이의 문맥 교환에 따른 과도한 오버헤드와 시간 소모의 문제점
-
-192. 멀티스레딩
-        - 하나의 응용프로그램이 여러 개의 스레드를 생성하고, 각 스레드가 하나의 작업을 처리하는 기법
-        - 하나의 응용프로그램에 속한 스레드는 변수 메모리, 파일 오픈 테이블 등 자원으로 공유하므로, 문맥 교환에 따른 오버헤드가 매주 작음
-        - 현재 대부분의 운영체제가 멀티스레딩을 기본으로 하고 있음
-    
-![Alt text](image-4.png)
-
-193. 자바 스레드
-        - 자바 가상 기계(JVM)에 의해 스케쥴되는 실행 단위의 코드 블럭
-        - 스레드의 생명 주기는 JVM에 의해 관리됨 : JVM은 스레드 단위로 스케쥴링
-
-194. JVM과 자바의 멀티스레딩
-        - 자바 응용프로그램이 시작될 때 JVM이 함께 실행됨
-        - 자바 응용프로그램이 종료하면 JVM도 함께 종료함
-
-195. 스레드 만드는 2가지 방법
-        - java.lang.Thread 클래스를 상속받아 스레드 작성
-        - java.lang.Runnable 인터페이스를 구현하여 스레드 작성
-```java
-import java.awt.*;
-import javax.swing.*;
-
-class TimerThread extends Thread {
-	private JLabel timerLabel; 
-	public TimerThread(JLabel timerLabel) {
-		this.timerLabel = timerLabel; 
-	}
-
-	
-	@Override
-	public void run() {
-		int n=0; 
-		while(true) { 
-			timerLabel.setText(Integer.toString(n)); 
-			n++; 
-			try {
-				Thread.sleep(1000); 
-			}
-			catch(InterruptedException e) {	return;}
-		}	
-	}
-}
-public class ThreadTimerEx extends JFrame {
-	public ThreadTimerEx() {
-			setTitle("Thread를 상속받은 타이머 스레드 예제");
-			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			Container c = getContentPane();
-			c.setLayout(new FlowLayout());
-			setSize(250, 150);
-			setVisible(true);
-
-			JLabel timerLabel = new JLabel();
-			timerLabel.setFont(new Font("Gothic", Font.ITALIC, 80));
-			c.add(timerLabel);
-	
-			TimerThread th = new TimerThread(timerLabel);
-			th.start(); 
-	}
+public class FileReaderEx {
 	public static void main(String[] args) {
-		new ThreadTimerEx();
+		FileReader in = null;
+		try {
+			in = new FileReader("c:\\windows\\system.ini"); 
+			int c;
+			while ((c = in.read()) != -1) { // 한 문자씩 파일 끝까지 읽는다.
+				System.out.print((char)c);
+			}
+			in.close();
+		}
+		catch (IOException e) {
+			System.out.println("입출력 오류");
+		}
 	}
 }
 ```
+
+212. 문자 스트림으로 텍스트 파일 쓰기
+        - 텍스트 파일에 쓰기 위해 문자 스트림 FileWriter 클래스 이용
+
+213. 바이트 스트림으로 바이너리 파일 쓰기 
+         - 프로그램 내의 변수, 배열, 버퍼에 든 바이너리 값을 파일에 그대로 기록
+
+214. 바이트 스트림으로 바이너리 파일 읽기
+        - 바이너리 파일에서 읽기 위해 FileInputStream 클래스 이용
 ```java
-import java.awt.*;
-import javax.swing.*;
-
-class TimerThread extends Thread {
-	private JLabel timerLabel; 
-	public TimerThread(JLabel timerLabel) {
-		this.timerLabel = timerLabel; 
-	}
-
-	
-	@Override
-	public void run() {
-		int n=0; 
-		while(true) { 
-			timerLabel.setText(Integer.toString(n)); 
-			n++; 
-			try {
-				Thread.sleep(1000); 
-			}
-			catch(InterruptedException e) {	return;}
-		}	
-	}
-}
-public class ThreadTimerEx extends JFrame {
-	public ThreadTimerEx() {
-			setTitle("Thread를 상속받은 타이머 스레드 예제");
-			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			Container c = getContentPane();
-			c.setLayout(new FlowLayout());
-			setSize(250, 150);
-			setVisible(true);
-
-			JLabel timerLabel = new JLabel();
-			timerLabel.setFont(new Font("Gothic", Font.ITALIC, 80));
-			c.add(timerLabel);
-	
-			TimerThread th = new TimerThread(timerLabel);
-			th.start(); 
-	}
+import java.io.*;
+public class FileInputStreamEx {
 	public static void main(String[] args) {
-		new ThreadTimerEx();
+		byte b[] = new byte [6]; 
+		try {
+			FileInputStream fin = 
+					new FileInputStream("c:\\Temp\\test.out");
+			int n=0, c;
+			while((c = fin.read())!= -1) {
+				b[n] = (byte)c; 
+				n++;
+			}
+
+			System.out.println(
+				"c:\\Temp\\test.out에서 읽은 배열을 출력합니다.");
+			for(int i=0; i<b.length; i++)
+				System.out.print(b[i]+" ");
+			System.out.println();
+
+			fin.close();
+		} catch(IOException e) { }
 	}
 }
 ```
-196. main 스레드
-        - JVM이 응용프로그램을 실행할 떄 디폴트로 생성되는 스레드
+215. File 클래스
+        - 파일의 경로명 및 속성을 다루는 클래스
+        - 파일 이름 변경, 삭제, 디렉터리 생성,  크기 등 파일 관리
+        - File 객체에는 파일 읽기/쓰기 기능 없음
 
-197. 스스로 종료
-        - run() 메소드 리턴
+216. TCP/IP 프로토콜
+        - 두 시스템 간에 데이터가 손상없이 안전하게 전송되도록 하는 통신 프로토콜
+        - TCP에서 동작하는 응용프로그램 사례 - HTTP, FTP
 
-198. 타 스레드에서 강제 종료
-        - interrupt() 메소드 사용
-```java
-import java.awt.event.*;
-import javax.swing.*;
-import java.util.Random;
+217. TCP/IP 프로토콜 특징
+        - 한 번 연결 후 계속 데이터 전송 가능 (연결형 통신)
+        - 보낸 순서대로 받아 응용프로그램에게 전달
 
-public class VibratingFrame extends JFrame implements Runnable {
-	private Thread th; 
-	public VibratingFrame() {
-		setTitle("진동하는 프레임 만들기");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(200,200);
-		setLocation(300,300); 
-		setVisible(true);
+![Alt text](image-2.png)
 
-		getContentPane().addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				if(!th.isAlive()) return;
-					th.interrupt(); 
-			}
-		});
-		th = new Thread(this); 
-		th.start(); 
-	}
-    @Override	
-	public void run() { 
-		Random r = new Random();
-		while(true) {
-			try {
-				Thread.sleep(20); 
-			}
-			catch(InterruptedException e){
-				return; 
-			}
-			int x = getX() + r.nextInt()%5; 
-			int y = getY() + r.nextInt()%5; 
-			setLocation(x, y); 
-		}
-	}
-	public static void main(String [] args) {
-		new VibratingFrame();
-	}
-}
-```
-199. 멀티스레드 프로그램 작성시 주의점
-        - 다수의 스레드가 공유 데이터에 동시에 접근하는 경우
+218. IP 주소
+        - 네트워크 상에서 유일하게 식별될 수 있는 컴퓨터 주소
+        - 현재는 32비트의 IPv4가 사용되고 있음
+        - 숫자로 된 주소는 기억하기 어려우므로 www.xxx.com과 같은 문자열로 구성된 도메인 이름으로 바꿔 사용
 
-200. 동기화
-        - 스레드 사이의 실행순서 제어 공유데이터에 대한 접근을 원활하게 하는 기법
+219. 포트(Port)
+        - 통신하는 프로그램 간에 가상의 연결단 포트 생성
+        - 모든 응용프로그램은 하나 이상의 포트 생성 가능
 
-201. 멀티스레드의 공유 데이터의 동시 접근 문제 해결
-        - 1: 공유 데이터를 접근하는 모든 스레드의 한 줄 세우기
-        - 2: 한 스레드가 공유 데이터에 대한 작업을 끝낼 때까지 다른 스레드가 대기 하도록 함
+220. 소켓(Socket)
+        - TCP/IP 네트워크를 이용하여 쉽게 통신 프로그램을 작성하도록 지원하는 기반 기술
+        - 자바로 소켓 통신할 수 있는 라이브러리 지원
+        - 소켓 종류 : 서버 소켓과 클라이언트 소켓
 
-202. 자바의 스레드 동기화 방법 2가지
-        - synchronized 키워드로 동기화 블록 지정
-        - wait()-notify() 메소드로 스레드의 실행 순서 제어
+221. 클라이언트에서 소켓으로 서버에 접속하는 코드
+        - 클라이언트 소켓 생성 및 서버에 접속
+        - 소켓으로부터 데이터를 전송할 입출력 스트림 생성
+        - 서버로 데이터 전송
+        - 서버로부터 데이터 수신
+        - 네트워크 접속 종료
 
-203. synchronized 키워드
-        - 스레드가 독점적으로 실행해야 하는 부분(동기화 코드)을 표시하는 키워드
-        - synchronized 블록 지정 방법: 메소드 전체 혹은 코드 블록 
+222. 서버에 클라이언트가 연결되는 과정 
+        - 서버는 서버 소켓으로 들어오는 연결 요청을 기다림
+        - 클라이언트가 서버에게 연결 요청
+        - 서버가 연결 요청 수략
 
-204. synchronized 블록이 실행될 때
-        - 먼저 실행한 스레드가 모니터 소유
-        - 모니터를 소유한 스레드가 모니터를 내려놓을때까지 다른 스레드 대기
-
-205. wait()-notify()가 필요한 경우
-        - 공유 데이터로 두 개 이상의 스레드가 데이터를 주고 받을때
-
-206. 동기화 메소드
-        - wait() : 다른 스레드가 notify()를 불러줄 때까지 기다린다
-        - notify() : wait()를 호출하여 대기중인 스레드를 깨운다
-```java
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-
-class MyLabel extends JLabel {
-	private int barSize = 0; 
-	private int maxBarSize;
-	
-	public MyLabel(int maxBarSize) { 
-		this.maxBarSize = maxBarSize;
-	}
-	
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		g.setColor(Color.MAGENTA);
-		int width = (int)(((double)(this.getWidth()))
-				/maxBarSize*barSize);
-		if(width==0) return; 
-		g.fillRect(0, 0, width, this.getHeight());
-	}
-	
-	synchronized void fill() {
-		if(barSize == maxBarSize) {
-			try {
-				wait(); 
-			} catch (InterruptedException e) { return; }
-		}
-		barSize++;
-		repaint(); 
-		notify(); 
-	}
-    synchronized void consume() {
-		if(barSize == 0) {
-			try {
-				wait(); 
-			} catch (InterruptedException e)
-				 { return; }
-		}
-		barSize--;
-		repaint(); 
-		notify(); 
-	}	
-}
-class ConsumerThread extends Thread {
-	private MyLabel bar;
-	
-	public ConsumerThread(MyLabel bar) {
-		this.bar = bar;
-	}
-	@Override
-	public void run() {
-		while(true) {
-			try {
-				sleep(200);
-				bar.consume(); 
-			} catch (InterruptedException e)
-			 { return; }
-		}
-	}
-}
-public class TabAndThreadEx  extends JFrame {
-	private MyLabel bar = new MyLabel(100); 	
-	public TabAndThreadEx(String title) {
-		super(title);
-		this.setDefaultCloseOperation
-				(JFrame.EXIT_ON_CLOSE);
-		Container c = getContentPane();
-		c.setLayout(null);
-		bar.setBackground(Color.ORANGE);
-		bar.setOpaque(true);
-		bar.setLocation(20,  50);
-		bar.setSize(300, 20); 
-		c.add(bar);
-		
-		c.addKeyListener(new KeyAdapter() {
-			public void keyPressed(KeyEvent e) 
-			{
-				bar.fill(); 
-			}
-		});
-		setSize(350,200);
-		setVisible(true);
-
-		c.setFocusable(true);		
-		c.requestFocus(); 
-		ConsumerThread th = new 
-			ConsumerThread(bar); 
-		th.start(); 
-	}
-
-	public static void main(String[] args) {
-		new TabAndThreadEx(
-			"아무키나 빨리 눌러 바 채우기");
-	}
-}
-```
+![Alt text](image-6.png)
  --------------------------------------------------------------------------------
 1. 프로젝트 생성시 디렉터리 판별 및 주의 
 
@@ -1676,6 +1324,477 @@ public class OptionPaneEx extends JFrame {
 	}
 	public static void main(String [] args) {
 		new OptionPaneEx();
+	}
+}
+```
+176. 스윙의 페인팅 기본
+        - 모든 컴포넌트는 자신의 모양을 스스로 그린다
+        - 컨테이너는 자신을 그리고 그 위에 자식 컴포넌트들에게 그리도록 지시
+        - 모든 스윙 컴포넌트는 자신의 모양을 그리는 paintComponent() 메소드 보유
+
+177. public void paintComponent(Graphics g)
+        - 스윙 컴포넌트가 자신의 모양을 그리는 메소드
+
+178. paintComponent(Graphic g)의 오버라이딩
+        - 개발자가 JComponent를 상속받아 새로운 컴포넌트 설계
+``` java
+import javax.swing.*;
+import java.awt.*;
+
+public class paintJPanelEx extends JFrame {
+	public paintJPanelEx() {
+		setTitle("JPanel의 paintComponent() 예제");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setContentPane(new MyPanel()); 
+		setSize(250,200);
+		setVisible(true);
+	}
+
+	class MyPanel extends JPanel {
+		public void paintComponent(Graphics g) {
+			super.paintComponent(g); 
+			g.setColor(Color.BLUE); 
+			g.drawRect(10,10,50,50); 
+			g.drawRect(50,50,50,50); 
+
+			g.setColor(Color.MAGENTA); 
+			g.drawRect(90,90,50,50);
+		}
+	}
+	public static void main(String [] args) {
+		new paintJPanelEx();
+	}
+}
+```
+179. 그래픽 기반 GUI 프로그래밍
+        - 스윙 컴포넌트에 의존하지 않고 선, 원 이미지 등을 이용하여 직접 화면을 구성하는 방법
+
+180. Graphics의 기능
+        - 색상 선택하기
+        - 문자열 그리기
+        - 도형 그리기
+        - 도형 칠하기
+        - 이미지 그리기
+        - 클리핑
+
+```java
+import javax.swing.*;
+import java.awt.*;
+
+public class GraphicsColorFontEx extends JFrame {
+	public GraphicsColorFontEx() {
+		setTitle("문자열, Color, Font 사용 예제");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setContentPane(new MyPanel());
+		setSize(300, 300);
+		setVisible(true);
+	}
+
+	class MyPanel extends JPanel {
+		public void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			g.setColor(Color.BLUE); 
+			g.drawString("자바가 정말 재밌다", 30,30);
+			g.setColor(new Color(255, 0, 0)); 
+			g.setFont(new Font("Arial", Font.ITALIC, 30));
+			g.drawString("How much?", 30, 70);
+			g.setColor(new Color(0x00ff00ff));
+			for(int i=1; i<=4; i++) {
+				g.setFont(new Font("Jokerman", Font.ITALIC, i*10));
+				g.drawString("This much!!", 30, 60+i*40);
+			}
+		}
+	}
+	public static void main(String [] args) {
+		new GraphicsColorFontEx();
+	}
+}
+```
+181. 도형 그리기
+        - 선, 티원, 사격형, 둥근 모서리 사각형, 원호, 폐 다각형 그리기
+        - 선의 굵기는 조절할 수 없음
+```java
+import javax.swing.*;
+import java.awt.*;
+
+public class GraphicsDrawLineEx extends JFrame {
+	public GraphicsDrawLineEx() {
+		setTitle("drawLine 사용");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setContentPane(new MyPanel());
+		setSize(200, 150);
+		setVisible(true);
+	}
+
+	class MyPanel extends JPanel {
+		public void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			g.setColor(Color.RED); 
+			g.drawLine(20, 20, 100, 100);
+            g.drawOval(20,20,80,80);
+            g.drawRect(20,20,80,80);
+            g.drawRoundRect(20,20,120,80,40,60);
+			g.drawArc(20,100,80,80,90,270);
+            // 다각형
+			int []x = {80,40,80,120};
+			int []y = {40,120,200,120}; 
+			g.drawPolygon(x, y, 4);
+		}
+	}
+	public static void main(String [] args) {
+		new GraphicsDrawLineEx();
+	}
+}
+```
+182. JLabel을 이용한 이미지 그리기
+        - 장점: 이미지 그리기 간편 용이
+        - 단점: 이미지의 원본 크기대로 그리므로 이미지 크기 조절 불가
+183. Graphics의 drawImage()로 이미지 출력
+        - 장점: 이미지 일부분 등 이미지의 원본 크기와 다르게 그리기 가능
+        - 단점: 컴포넌트로 관리할 수 없음
+```java
+import javax.swing.*;
+import java.awt.*;
+
+public class GraphicsDrawImageEx1 extends JFrame {
+	public GraphicsDrawImageEx1() {
+		setTitle("원본 크기로 원하는 위치에 이미지 그리기");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setContentPane(new MyPanel());
+		
+		setSize(300, 400);
+		setVisible(true);
+	}
+
+	class MyPanel extends JPanel {
+		private ImageIcon icon = new ImageIcon("images/image0.jpg");
+		private Image img = icon.getImage();
+
+		public void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			// g.drawImage(img, 20,20, this);
+            g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
+		}
+	}
+
+	public static void main(String [] args) {
+		new GraphicsDrawImageEx1();
+	}
+} 
+```
+184. repaint()
+        - 모든 컴포넌트가 가지고 있는 메소드
+
+185. repaint()의 호출이 필요한 경우
+        - 프로그램에서 컴포넌트의 모양과 위치를 변경하고 바로 화면에 반영시키고자 하는 경우
+        - 컴포넌트가 다시 그려져야 그 때 변경된 위치에 변경된 모양으로 출력됨
+        - repaint()는 자바 플랫폼에게 지금 당장 컴포넌트를 다시 그리도록 지시함
+
+186. 멀티태스킹
+        - 여러 개의 작업(태스크)이 동시에 처리되는 것
+
+![Alt text](image-3.png)
+
+187. 스레드(thread)
+        - 운영체제에 의해 관리되는 하나의 작업 혹은 태스크
+        - 스레드와 태스크(혹은 작업)은 바꾸어 사용해도 무관
+
+188. 멀티스레딩(multi-threading)
+        - 여러 스레드를 동시에 실행시키는 응용프로그램을 작성하는 기법
+
+189. 스레드 코드
+        - 작업을 실행하기 위해 작성한 프로그램 코드
+        - 개발자가 작성
+190. 스레드 정보
+        - 스레드 명, 스레드 ID, 스레드의 실행 소요 시간, 스레드의 우선 순위 등 
+        - 운영체제가 스레드에 대해 관리하는 정보
+
+191. 멀티프로세싱
+        - 하나의 응용프로그램이 여러 개의 프로세스를 생성하고, 각 프로세스가 하나의 작업을 처리하는 기법
+        - 각 프로세스 독립된 메모리 영역을 보유하고 실행
+        - 프로세스 사이의 문맥 교환에 따른 과도한 오버헤드와 시간 소모의 문제점
+
+192. 멀티스레딩
+        - 하나의 응용프로그램이 여러 개의 스레드를 생성하고, 각 스레드가 하나의 작업을 처리하는 기법
+        - 하나의 응용프로그램에 속한 스레드는 변수 메모리, 파일 오픈 테이블 등 자원으로 공유하므로, 문맥 교환에 따른 오버헤드가 매주 작음
+        - 현재 대부분의 운영체제가 멀티스레딩을 기본으로 하고 있음
+    
+![Alt text](image-4.png)
+
+193. 자바 스레드
+        - 자바 가상 기계(JVM)에 의해 스케쥴되는 실행 단위의 코드 블럭
+        - 스레드의 생명 주기는 JVM에 의해 관리됨 : JVM은 스레드 단위로 스케쥴링
+
+194. JVM과 자바의 멀티스레딩
+        - 자바 응용프로그램이 시작될 때 JVM이 함께 실행됨
+        - 자바 응용프로그램이 종료하면 JVM도 함께 종료함
+
+195. 스레드 만드는 2가지 방법
+        - java.lang.Thread 클래스를 상속받아 스레드 작성
+        - java.lang.Runnable 인터페이스를 구현하여 스레드 작성
+```java
+import java.awt.*;
+import javax.swing.*;
+
+class TimerThread extends Thread {
+	private JLabel timerLabel; 
+	public TimerThread(JLabel timerLabel) {
+		this.timerLabel = timerLabel; 
+	}
+
+	
+	@Override
+	public void run() {
+		int n=0; 
+		while(true) { 
+			timerLabel.setText(Integer.toString(n)); 
+			n++; 
+			try {
+				Thread.sleep(1000); 
+			}
+			catch(InterruptedException e) {	return;}
+		}	
+	}
+}
+public class ThreadTimerEx extends JFrame {
+	public ThreadTimerEx() {
+			setTitle("Thread를 상속받은 타이머 스레드 예제");
+			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			Container c = getContentPane();
+			c.setLayout(new FlowLayout());
+			setSize(250, 150);
+			setVisible(true);
+
+			JLabel timerLabel = new JLabel();
+			timerLabel.setFont(new Font("Gothic", Font.ITALIC, 80));
+			c.add(timerLabel);
+	
+			TimerThread th = new TimerThread(timerLabel);
+			th.start(); 
+	}
+	public static void main(String[] args) {
+		new ThreadTimerEx();
+	}
+}
+```
+```java
+import java.awt.*;
+import javax.swing.*;
+
+class TimerThread extends Thread {
+	private JLabel timerLabel; 
+	public TimerThread(JLabel timerLabel) {
+		this.timerLabel = timerLabel; 
+	}
+
+	
+	@Override
+	public void run() {
+		int n=0; 
+		while(true) { 
+			timerLabel.setText(Integer.toString(n)); 
+			n++; 
+			try {
+				Thread.sleep(1000); 
+			}
+			catch(InterruptedException e) {	return;}
+		}	
+	}
+}
+public class ThreadTimerEx extends JFrame {
+	public ThreadTimerEx() {
+			setTitle("Thread를 상속받은 타이머 스레드 예제");
+			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			Container c = getContentPane();
+			c.setLayout(new FlowLayout());
+			setSize(250, 150);
+			setVisible(true);
+
+			JLabel timerLabel = new JLabel();
+			timerLabel.setFont(new Font("Gothic", Font.ITALIC, 80));
+			c.add(timerLabel);
+	
+			TimerThread th = new TimerThread(timerLabel);
+			th.start(); 
+	}
+	public static void main(String[] args) {
+		new ThreadTimerEx();
+	}
+}
+```
+196. main 스레드
+        - JVM이 응용프로그램을 실행할 떄 디폴트로 생성되는 스레드
+
+197. 스스로 종료
+        - run() 메소드 리턴
+
+198. 타 스레드에서 강제 종료
+        - interrupt() 메소드 사용
+```java
+import java.awt.event.*;
+import javax.swing.*;
+import java.util.Random;
+
+public class VibratingFrame extends JFrame implements Runnable {
+	private Thread th; 
+	public VibratingFrame() {
+		setTitle("진동하는 프레임 만들기");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(200,200);
+		setLocation(300,300); 
+		setVisible(true);
+
+		getContentPane().addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if(!th.isAlive()) return;
+					th.interrupt(); 
+			}
+		});
+		th = new Thread(this); 
+		th.start(); 
+	}
+    @Override	
+	public void run() { 
+		Random r = new Random();
+		while(true) {
+			try {
+				Thread.sleep(20); 
+			}
+			catch(InterruptedException e){
+				return; 
+			}
+			int x = getX() + r.nextInt()%5; 
+			int y = getY() + r.nextInt()%5; 
+			setLocation(x, y); 
+		}
+	}
+	public static void main(String [] args) {
+		new VibratingFrame();
+	}
+}
+```
+199. 멀티스레드 프로그램 작성시 주의점
+        - 다수의 스레드가 공유 데이터에 동시에 접근하는 경우
+
+200. 동기화
+        - 스레드 사이의 실행순서 제어 공유데이터에 대한 접근을 원활하게 하는 기법
+
+201. 멀티스레드의 공유 데이터의 동시 접근 문제 해결
+        - 1: 공유 데이터를 접근하는 모든 스레드의 한 줄 세우기
+        - 2: 한 스레드가 공유 데이터에 대한 작업을 끝낼 때까지 다른 스레드가 대기 하도록 함
+
+202. 자바의 스레드 동기화 방법 2가지
+        - synchronized 키워드로 동기화 블록 지정
+        - wait()-notify() 메소드로 스레드의 실행 순서 제어
+
+203. synchronized 키워드
+        - 스레드가 독점적으로 실행해야 하는 부분(동기화 코드)을 표시하는 키워드
+        - synchronized 블록 지정 방법: 메소드 전체 혹은 코드 블록 
+
+204. synchronized 블록이 실행될 때
+        - 먼저 실행한 스레드가 모니터 소유
+        - 모니터를 소유한 스레드가 모니터를 내려놓을때까지 다른 스레드 대기
+
+205. wait()-notify()가 필요한 경우
+        - 공유 데이터로 두 개 이상의 스레드가 데이터를 주고 받을때
+
+206. 동기화 메소드
+        - wait() : 다른 스레드가 notify()를 불러줄 때까지 기다린다
+        - notify() : wait()를 호출하여 대기중인 스레드를 깨운다
+```java
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+class MyLabel extends JLabel {
+	private int barSize = 0; 
+	private int maxBarSize;
+	
+	public MyLabel(int maxBarSize) { 
+		this.maxBarSize = maxBarSize;
+	}
+	
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		g.setColor(Color.MAGENTA);
+		int width = (int)(((double)(this.getWidth()))
+				/maxBarSize*barSize);
+		if(width==0) return; 
+		g.fillRect(0, 0, width, this.getHeight());
+	}
+	
+	synchronized void fill() {
+		if(barSize == maxBarSize) {
+			try {
+				wait(); 
+			} catch (InterruptedException e) { return; }
+		}
+		barSize++;
+		repaint(); 
+		notify(); 
+	}
+    synchronized void consume() {
+		if(barSize == 0) {
+			try {
+				wait(); 
+			} catch (InterruptedException e)
+				 { return; }
+		}
+		barSize--;
+		repaint(); 
+		notify(); 
+	}	
+}
+class ConsumerThread extends Thread {
+	private MyLabel bar;
+	
+	public ConsumerThread(MyLabel bar) {
+		this.bar = bar;
+	}
+	@Override
+	public void run() {
+		while(true) {
+			try {
+				sleep(200);
+				bar.consume(); 
+			} catch (InterruptedException e)
+			 { return; }
+		}
+	}
+}
+public class TabAndThreadEx  extends JFrame {
+	private MyLabel bar = new MyLabel(100); 	
+	public TabAndThreadEx(String title) {
+		super(title);
+		this.setDefaultCloseOperation
+				(JFrame.EXIT_ON_CLOSE);
+		Container c = getContentPane();
+		c.setLayout(null);
+		bar.setBackground(Color.ORANGE);
+		bar.setOpaque(true);
+		bar.setLocation(20,  50);
+		bar.setSize(300, 20); 
+		c.add(bar);
+		
+		c.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) 
+			{
+				bar.fill(); 
+			}
+		});
+		setSize(350,200);
+		setVisible(true);
+
+		c.setFocusable(true);		
+		c.requestFocus(); 
+		ConsumerThread th = new 
+			ConsumerThread(bar); 
+		th.start(); 
+	}
+
+	public static void main(String[] args) {
+		new TabAndThreadEx(
+			"아무키나 빨리 눌러 바 채우기");
 	}
 }
 ```
